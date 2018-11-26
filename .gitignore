@@ -1,0 +1,7 @@
+*pycache*
+.tox
+.vscode
+.idea
+.*cache
+*.egg-info
+*.pyc
