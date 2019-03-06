@@ -1,0 +1,17 @@
+version: '2'
+services:
+    docker:
+        build: ./test_env/docker/
+        privileged: true
+        restart: always
+        volumes:
+            - ${KUBECONFIG}/..:/.kube/
+    tests:
+        image: matheusmelo/integration-tests
+        environment:
+            DOCKER_HOST: tcp://docker:2375
+            DOCKER_HOST_URL: docker
+        volumes:
+            - .:/integration-tests/.
+        depends_on:
+            - docker

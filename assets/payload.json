@@ -1,0 +1,50 @@
+{
+    "plugin": "kubejobs",
+    "plugin_info": {
+        "username": "admin",
+        "password": "grafana123123",
+        "cmd": [
+            "python",
+            "application.py"
+        ],
+        "img": "matheusmelo/sort_strings_no_swift",
+        "init_size": 1,
+        "redis_workload": "https://gist.githubusercontent.com/GabrielSVinha/cf2ca2604160aedbc7675aac60cccc77/raw/47b655333742d4fe0a403b6fba48137527034d62/workload",
+        "config_id": "asd",
+        "control_plugin": "kubejobs",
+        "control_parameters": {
+            "max_size": 9,
+            "actuator": "k8s_replicas",
+            "check_interval": 5,
+            "trigger_down": 0,
+            "trigger_up": 0,
+            "min_rep": 1,
+            "max_rep": 10,
+            "actuation_size": 1,
+            "metric_source": "redis"
+        },
+        "monitor_plugin": "kubejobs",
+        "monitor_info": {
+            "expected_time": 60
+        },
+        "enable_visualizer": true,
+        "visualizer_plugin": "k8s-grafana",
+        "visualizer_info": {
+            "datasource_type": "influxdb"
+        },
+        "env_vars": {}
+    },
+    "scaler_plugin": "kubejobs",
+    "scaling_parameters": {
+        "max_size": 90,
+        "actuator": "k8s_replicas",
+        "check_interval": 1,
+        "trigger_down": 0,
+        "trigger_up": 0,
+        "min_cap": 2,
+        "max_cap": 30,
+        "actuation_size": 5,
+        "metric_source": "redis"
+    },
+    "enable_auth": false
+}
