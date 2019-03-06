@@ -7,10 +7,15 @@ This repository contains integration tests of internal and external components i
 
 ## Running
 
-First, you need to install the dependencies in your host, check the [deps](deps/) directory to more instructions.
-
-Run the integration tests using tox:
+First, you need to have Docker and Docker Compose installed in your OS.
+Next, if not already, you have to set the KUBECONFIG env var to the cluster you want to run tests on:
 
 ```bash
-$ tox
+$ export KUBECONFIG=/path/to/your/.kube/config
+```
+
+Finally, run the integration tests with docker-compose:
+
+```bash
+$ docker-compose up
 ```
