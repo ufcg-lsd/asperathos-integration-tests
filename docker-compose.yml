@@ -7,7 +7,7 @@ services:
         volumes:
             - ${KUBECONFIG}/..:/.kube/
     tests:
-        image: matheusmelo/integration-tests
+        build: .
         environment:
             DOCKER_HOST: tcp://docker:2375
             DOCKER_HOST_URL: docker

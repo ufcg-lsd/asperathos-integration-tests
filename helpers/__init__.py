@@ -5,7 +5,7 @@ from os import environ
 
 DOCKER_HOST = environ['DOCKER_HOST_URL']
 MANAGER_URL = "http://{}:1500".format(DOCKER_HOST)
-CONTROLLER_URL = "http://{}:5000".format(DOCKER_HOST)
+CONTROLLER_URL = "http://{}:1502".format(DOCKER_HOST)
 MONITOR_URL = "http://{}:5001".format(DOCKER_HOST)
 VISUALIZER_URL = "http://{}:5002".format(DOCKER_HOST)
 
