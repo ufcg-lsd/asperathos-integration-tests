@@ -1,0 +1,34 @@
+version: '2'
+services:
+    manager:
+        image: asperathos_manager:integration-tests
+        ports:
+            - 1500:1500
+        environment:
+            - KUBECONFIG=/.kube/config
+        volumes:
+            - /.kube:/.kube
+    controller:
+        image: asperathos_controller:integration-tests
+        ports:
+            - 1502:1502
+        environment:
+            - KUBECONFIG=/.kube/config
+        volumes:
+            - /.kube:/.kube
+    monitor:
+        image: asperathos_monitor:integration-tests
+        ports:
+            - 5001:5001
+        environment:
+            - KUBECONFIG=/.kube/config
+        volumes:
+            - /.kube:/.kube
+    visualizer:
+        image: asperathos_visualizer:integration-tests
+        ports:
+            - 5002:5002
+        environment:
+            - KUBECONFIG=/.kube/config
+        volumes:
+            - /.kube:/.kube

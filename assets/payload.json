@@ -1,0 +1,38 @@
+{
+    "plugin": "kubejobs",
+    "plugin_info": {
+        "username": "admin",
+        "password": "grafana123123",
+        "cmd": [
+            "python",
+            "application.py"
+        ],
+        "img": "matheusmelo/sort_strings_no_swift",
+        "init_size": 1,
+        "redis_workload": "https://gist.githubusercontent.com/matheuscmelo/d2f621c4b0feb91d829c4579329263b7/raw/b40bb61040ce1f951e2fdc96f1d2329bb17e9c38/workload_it",
+        "config_id": "asd",
+        "control_plugin": "kubejobs",
+        "control_parameters": {
+            "max_size": 2,
+            "actuator": "k8s_replicas",
+            "check_interval": 5,
+            "trigger_down": 0,
+            "trigger_up": 0,
+            "min_rep": 1,
+            "max_rep": 3,
+            "actuation_size": 1,
+            "metric_source": "redis"
+        },
+        "monitor_plugin": "kubejobs",
+        "monitor_info": {
+            "expected_time": 20
+        },
+        "enable_visualizer": true,
+        "visualizer_plugin": "k8s-grafana",
+        "visualizer_info": {
+            "datasource_type": "influxdb"
+        },
+        "env_vars": {}
+    },
+    "enable_auth": false
+}
