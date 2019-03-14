@@ -1,5 +1,6 @@
 FROM python:2.7
-COPY ./asperathos-controller/ .
+COPY ./asperathos-controller/ /asperathos-controller/
+WORKDIR /asperathos-controller
+COPY ./controller.cfg ./controller.cfg
 RUN pip install setuptools tox flake8
-RUN pip install -r requirements.txt
 ENTRYPOINT ./run.sh
