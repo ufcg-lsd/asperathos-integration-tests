@@ -5,13 +5,34 @@ services:
         privileged: true
         restart: always
         volumes:
-            - ${KUBECONFIG}/..:/.kube/
+            - /.kube/:/.kube/
+            - d54-data:/demo-tests/d54
+            - organon-data:/demo-tests/organon
     tests:
         build: .
         environment:
             DOCKER_HOST: tcp://docker:2375
             DOCKER_HOST_URL: docker
+            ASPERATHOS_URL: docker:1500/submissions
+            VISUALIZER_URL: docker:5002/visualizing
+            WRAPPER_IMAGE: 10.11.5.6:5000/secure-demo/wrapper:worker-fortran
+            OS_PROJECT_DOMAIN_NAME: LSD
+            OS_USER_DOMAIN_NAME: LSD
+            OS_PROJECT_NAME: asperathos
+            OS_USERNAME: asperathos
+            OS_PASSWORD: 4sp3r4th0s-us3r
+            OS_PROJECT_ID: 03fff10deb3d4c4db5317acae3055e0f
+            OS_AUTH_URL: https://secure-cloud.lsd.ufcg.edu.br:5000/v3
+
         volumes:
             - .:/integration-tests/.
+            - d54-data:/demo-tests/d54
+            - organon-data:/demo-tests/organon
         depends_on:
             - docker
+
+volumes:
+    d54-data:
+        external: true
+    organon-data:
+        external: true
