@@ -6,11 +6,9 @@ pipeline {
       steps {
         labelledShell script: 'docker network create --attachable network-integration_tests-$BUILD_ID', label: "Create test network"
         labelledShell script: 'docker build . -t integration-tests_build-$BUILD_ID', label: "Build image"
-        labelledShell script: 'docker volume create d54-data-$BUILD_ID', label: "Create volume for D5.4 demo"
-        labelledShell script: 'docker volume create organon-data-$BUILD_ID', label: "Create volume for Organon demo"
-        labelledShell script: 'docker run -t -d --privileged --network=network-integration_tests-$BUILD_ID -v /.kube:/.kube/ -v d54-data-$BUILD_ID:/demo-tests/d54 -v organon-data-$BUILD_ID:/demo-tests/organon --name docker-integration_tests-$BUILD_ID asperathos-docker', label: "Run Docker container"
-        labelledShell script: """docker run -i --network=network-integration_tests-$BUILD_ID -v d54-data-$BUILD_ID:/demo-tests/d54 \
-        -v organon-data-$BUILD_ID:/demo-tests/organon --name integration-tests-integration_tests-$BUILD_ID \
+        labelledShell script: 'docker run -t -d --privileged --network=network-integration_tests-$BUILD_ID -v /.kube:/.kube/ -v d54-data-integration_tests-$BUILD_ID:/demo-tests/d54 -v organon-data-integration_tests-$BUILD_ID:/demo-tests/organon --name docker-integration_tests-$BUILD_ID asperathos-docker', label: "Run Docker container"
+        labelledShell script: """docker run -i --network=network-integration_tests-$BUILD_ID -v d54-data-integration_tests-$BUILD_ID:/demo-tests/d54 \
+        -v organon-data-integration_tests-$BUILD_ID:/demo-tests/organon --name integration-tests-integration_tests-$BUILD_ID \
         -e DOCKER_HOST=tcp://docker-integration_tests-$BUILD_ID:2375 \
         -e DOCKER_HOST_URL=docker-integration_tests-$BUILD_ID \
         -e ASPERATHOS_URL=docker-integration_tests-$BUILD_ID:1500/submissions \
@@ -24,8 +22,8 @@ pipeline {
       labelledShell script: 'docker rm -v docker-integration_tests-$BUILD_ID', label: "Remove Docker container"
       labelledShell script: 'docker rm -v integration-tests-integration_tests-$BUILD_ID', label: "Remove integration tests container"
       labelledShell script: 'docker network rm network-integration_tests-$BUILD_ID', label: "Remove test network"
-      labelledShell script: 'docker volume rm d54-data-$BUILD_ID', label: "Remove D5.4 volume"
-      labelledShell script: 'docker volume rm organon-data-$BUILD_ID', label: "Remove Organon volume"
+      labelledShell script: 'docker volume rm d54-data-integration_tests-$BUILD_ID', label: "Remove D5.4 volume"
+      labelledShell script: 'docker volume rm organon-data-integration_tests-$BUILD_ID', label: "Remove Organon volume"
     }
     success {
         labelledShell script: 'docker image tag integration-tests_build-$BUILD_ID integration-tests:latest', label: "Tag image"
