@@ -99,5 +99,5 @@ def get_manager_container_id():
 
 
 def restart_container(container_id):
-    docker_command = 'docker restart {} && sleep 10s'.format(container_id)
+    docker_command = 'docker restart {} && sleep 1m'.format(container_id)
     subprocess.check_output(docker_command, shell=True)
