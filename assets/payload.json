@@ -28,6 +28,7 @@
             "expected_time": 20
         },
         "enable_visualizer": true,
+        "enable_detailed_report": true,
         "visualizer_plugin": "k8s-grafana",
         "visualizer_info": {
             "datasource_type": "influxdb"
