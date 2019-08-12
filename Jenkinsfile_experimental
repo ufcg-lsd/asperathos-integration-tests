@@ -46,10 +46,10 @@ pipeline {
     }
 
     failure {
-      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_manager_1', label: "Manager logs"
-      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_monitor_1', label: "Monitor logs"
-      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_visualizer_1', label: "Visualizer logs"
-      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_controller_1', label: "Controller logs"
+      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_manager_1 || true', label: "Manager logs"
+      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_monitor_1 || true', label: "Monitor logs"
+      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_visualizer_1 || true', label: "Visualizer logs"
+      labelledShell script: 'docker exec docker-integration_tests-$BUILD_ID docker logs testenv_controller_1 || true', label: "Controller logs"
     }
   }
 }
