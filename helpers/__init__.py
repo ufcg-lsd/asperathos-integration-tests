@@ -1,6 +1,8 @@
 import requests
-from time import sleep
 import json
+import subprocess
+
+from time import sleep
 from os import environ
 
 DOCKER_HOST = environ['DOCKER_HOST_URL']
@@ -71,3 +73,31 @@ def get_job_payload():
     """
     with open("assets/payload.json", 'r') as f:
         return json.loads(f.read())
+
+
+def get_jobs(manager_url):
+    return requests.get(manager_url + "/submissions").json()
+
+
+def delete_job(manager_url, job_id):
+    requests.delete(manager_url + "/submissions/{}".format(job_id),
+                    json={
+                          "enable_auth": False
+                         })
+
+
+def get_manager_container_id():
+    """ Retrieves manager container id
+            Arguments:
+                None
+            Returns:
+                Manager container id
+        """
+    docker_command = 'docker container ls -q -f name=manager'
+    id_ = subprocess.check_output(docker_command, shell=True).split()[0]
+    return id_.decode()
+
+
+def restart_container(container_id):
+    docker_command = 'docker restart {} && sleep 10s'.format(container_id)
+    subprocess.check_output(docker_command, shell=True)
