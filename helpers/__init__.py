@@ -34,15 +34,37 @@ def wait_for_grafana_url_generation(visualizer_url, job_id, max_wait_time=120, m
                 return url
     raise Exception("Max tries to get generated URL exceeded.")
 
+def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10)
+    """ Waits for a defined time for a job to be completed.
+            Arguments:
+                manager_url {string} -- The URL from the Asperathos Manager
+                job_id {string} -- Job id generated when the job is submitted
+                max_wait_time {int} -- Maximum time, in seconds, to be waited
+                max_tries {int} -- Maximum times this function will try to get the URL
+            Returns:
+                url {string} -- Grafana URL
+            Raises:
+                Exception -- When max_tries is reached without success
+    """
+    delta = max_wait_time / max_tries
+    for _ in range(max_tries):
+        sleep(delta)
+        response = requests.get(manager_url + '/submissions/{}'.format(job_id))
+        if response.ok:
+            status = response.json().get('status')
+            if status == "completed":
+                return True
+    raise Exception("Max tries to get generated URL exceeded.")
 
-def create_job(manager_url):
+def create_job(manager_url,payload):
     """ Submits a job to Asperathos
             Arguments:
                 manager_url {string} -- THe URL from Asperathos Manager
+                payload {int} -- the id for the choosen payload
             Returns:
                 job_id {string} -- The Job identifier
     """
-    job_payload = get_job_payload()
+    job_payload = get_job_payload(payload)
     response = requests.post(manager_url + '/submissions', json=job_payload)
     response_payload = response.json()
     job_id = response_payload.get('job_id')
@@ -64,14 +86,15 @@ def stop_job(manager_url, job_id):
     })
 
 
-def get_job_payload():
+def get_job_payload(id):
     """ Retrieves JSON payload of the job from the assets folder
             Arguments:
                 None
             Returns:
                 Job's JSON payload {dict}
     """
-    with open("assets/payload.json", 'r') as f:
+    payload_path = "assets/payload" + str(id) + ".json"
+    with open(payload_path, 'r') as f:
         return json.loads(f.read())
 
 
