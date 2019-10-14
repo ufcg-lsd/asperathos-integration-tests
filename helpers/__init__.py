@@ -52,7 +52,7 @@ def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10):
         response = requests.get(manager_url + '/submissions/{}'.format(job_id))
         if response.ok:
             status = response.json().get('status')
-            if status == "completed" and response.status_code == 200:
+            if status == "completed" and response.json().get('final_replicas'):
                     return True
 
     raise Exception("Max tries to job get completed.")

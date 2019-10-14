@@ -47,7 +47,6 @@ def test_scalling_up():
     wait_for_job_complete(MANAGER_URL,job_id)
     response = requests.get(MANAGER_URL + '/submissions/{}'.format(job_id))
     replicas = response.json().get('final_replicas')
-    print(replicas)
     print(response.json())
     assert int(replicas) > INITIAL_REPLICAS
     stop_job(manager_url=MANAGER_URL, job_id=job_id)
@@ -64,6 +63,7 @@ def test_scalling_down():
     wait_for_job_complete(MANAGER_URL,job_id)
     response = requests.get(MANAGER_URL + '/submissions/{}'.format(job_id))
     replicas = response.json().get('final_replicas')
+    print(response.json())
     assert int(replicas) < INITIAL_REPLICAS
     stop_job(manager_url=MANAGER_URL, job_id=job_id)
 
@@ -78,9 +78,12 @@ def test_monitor_metrics():
     job_id = create_job(MANAGER_URL,3)
     wait_for_job_complete(MANAGER_URL, job_id)
     submission_url = MANAGER_URL + '/submissions/{}'.format(job_id)
-    report_url = submission_url + "/report"
+    report_url = submission_url + "/report" 
     monitor = requests.get(submission_url).json()   
     detailed = requests.get(report_url).json()
+    print(monitor)
+    print(detailed)
+
 
     monitor_max_error,monitor_max_error_time = monitor['max_error']
     monitor_min_error,monitor_min_error_time = monitor['min_error']
