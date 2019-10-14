@@ -34,7 +34,7 @@ def wait_for_grafana_url_generation(visualizer_url, job_id, max_wait_time=120, m
                 return url
     raise Exception("Max tries to get generated URL exceeded.")
 
-def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10)
+def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10):
     """ Waits for a defined time for a job to be completed.
             Arguments:
                 manager_url {string} -- The URL from the Asperathos Manager
@@ -52,9 +52,10 @@ def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10)
         response = requests.get(manager_url + '/submissions/{}'.format(job_id))
         if response.ok:
             status = response.json().get('status')
-            if status == "completed":
-                return True
-    raise Exception("Max tries to get generated URL exceeded.")
+            if status == "completed" and response.status_code == 200:
+                    return True
+
+    raise Exception("Max tries to job get completed.")
 
 def create_job(manager_url,payload):
     """ Submits a job to Asperathos

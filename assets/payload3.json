@@ -9,12 +9,13 @@
         ],
         "img": "10.11.5.6:5000/asperathos-app/ci-image2",
         "init_size": 10,
-        "redis_workload": "https://git.lsd.ufcg.edu.br/snippets/131/raw",
+        "redis_workload": "https://git.lsd.ufcg.edu.br/snippets/132/raw",
         "config_id": "asd",
         "control_plugin": "kubejobs",
+        "job_resources_lifetime":120,
         "control_parameters": {
         	"schedule_strategy":"default",
-            "max_size": 5,
+            "max_size": 1,
             "actuator": "k8s_replicas",
             "check_interval": 1,
             "trigger_down": 1,
@@ -26,7 +27,7 @@
         },
         "monitor_plugin": "kubejobs",
         "monitor_info": {
-            "expected_time": 1000
+            "expected_time": 1000000000
         },
         "enable_visualizer": true,
         "visualizer_plugin": "k8s-grafana",

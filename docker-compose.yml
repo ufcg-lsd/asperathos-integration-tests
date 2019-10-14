@@ -5,9 +5,13 @@ services:
         privileged: true
         restart: always
         volumes:
-            - /.kube/:/.kube/
+            - ~/.kube/:/.kube/
             - d54-data:/demo-tests/d54
             - organon-data:/demo-tests/organon
+        environment:
+            # This disables TLS for the dind image HOTFIX
+            DOCKER_TLS_CERTDIR: ""
+
     tests:
         build: .
         environment:
@@ -15,7 +19,6 @@ services:
             DOCKER_HOST_URL: docker
             ASPERATHOS_URL: docker:1500/submissions
             VISUALIZER_URL: docker:5002/visualizing
-
         volumes:
             - .:/integration-tests/.
             - d54-data:/demo-tests/d54
