@@ -55,9 +55,9 @@ def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10):
             if status == "completed" and response.json().get('final_replicas'):
                     return True
 
-    raise Exception("Max tries to job get completed.")
+    raise Exception("Max tries for job to be completed exceeded.")
 
-def create_job(manager_url,payload):
+def create_job(manager_url, payload):
     """ Submits a job to Asperathos
             Arguments:
                 manager_url {string} -- THe URL from Asperathos Manager
