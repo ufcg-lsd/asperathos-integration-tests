@@ -1,0 +1,40 @@
+{
+    "plugin": "kubejobs",
+    "plugin_info": {
+        "username": "admin",
+        "password": "grafana123123",
+        "cmd": [
+            "/bin/bash",
+            "wrapper.sh"
+        ],
+        "img": "10.11.5.6:5000/asperathos-app/ci-image2",
+        "init_size": 1,
+        "redis_workload": "https://git.lsd.ufcg.edu.br/snippets/133/raw",
+        "config_id": "asd",
+        "control_plugin": "kubejobs",
+        "job_resources_lifetime":120,
+        "control_parameters": {
+        	"schedule_strategy":"default",
+            "max_size": 10,
+            "actuator": "k8s_replicas",
+            "check_interval": 1,
+            "trigger_down": 1,
+            "trigger_up": 1,
+            "min_rep": 1,
+            "max_rep": 10,
+            "actuation_size": 1,
+            "metric_source": "redis"
+        },
+        "monitor_plugin": "kubejobs",
+        "monitor_info": {
+            "expected_time": 1
+        },
+        "enable_visualizer": true,
+        "visualizer_plugin": "k8s-grafana",
+        "visualizer_info": {
+            "datasource_type": "influxdb"
+        },
+        "env_vars": {}
+    },
+    "enable_auth": false
+}

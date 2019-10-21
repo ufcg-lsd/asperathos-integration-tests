@@ -10,7 +10,7 @@ def job_payload():
             Returns:
                 Job payload
         """
-        return get_job_payload()
+        return get_job_payload(1)
 
 @pytest.fixture
 def manager_container_id():

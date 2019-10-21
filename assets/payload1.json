@@ -12,6 +12,7 @@
         "redis_workload": "https://gist.githubusercontent.com/matheuscmelo/d2f621c4b0feb91d829c4579329263b7/raw/b40bb61040ce1f951e2fdc96f1d2329bb17e9c38/workload_it",
         "config_id": "asd",
         "control_plugin": "kubejobs",
+        "job_resources_lifetime":120,
         "control_parameters": {
             "max_size": 2,
             "actuator": "k8s_replicas",
