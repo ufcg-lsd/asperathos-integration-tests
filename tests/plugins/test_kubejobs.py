@@ -62,7 +62,7 @@ def test_controller_scales_down():
     """
     INITIAL_REPLICAS = 10
     job_id = create_job(MANAGER_URL, 3)
-    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=120)
+    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=180)
     detailed_report = requests.get(MANAGER_URL + '/submissions/{}/report'\
                       .format(job_id))
     data = detailed_report.json()
@@ -79,7 +79,7 @@ def test_monitor_report_matches_detailed():
         None
     """
     job_id = create_job(MANAGER_URL, 3)
-    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=120)
+    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=180)
     submission_url = MANAGER_URL + '/submissions/{}'.format(job_id)
     report_url = submission_url + "/report" 
     monitor = requests.get(submission_url).json()   
