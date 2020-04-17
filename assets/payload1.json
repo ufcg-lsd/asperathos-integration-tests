@@ -7,7 +7,7 @@
             "python",
             "application.py"
         ],
-        "img": "matheusmelo/sort_strings_no_swift",
+        "img": "registry-git.lsd.ufcg.edu.br/asperathos-public/asperathos-public-images/ci:batch-base",
         "init_size": 1,
         "redis_workload": "https://gist.githubusercontent.com/matheuscmelo/d2f621c4b0feb91d829c4579329263b7/raw/b40bb61040ce1f951e2fdc96f1d2329bb17e9c38/workload_it",
         "config_id": "asd",
