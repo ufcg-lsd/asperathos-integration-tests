@@ -4,8 +4,8 @@
         "username": "admin",
         "password": "grafana123123",
         "cmd": [
-            "python",
-            "application.py"
+            "/bin/bash",
+            "wrapper.sh"
         ],
         "img": "registry-git.lsd.ufcg.edu.br/asperathos-public/asperathos-public-images/ci:batch-base",
         "init_size": 1,
