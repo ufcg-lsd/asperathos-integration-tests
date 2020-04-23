@@ -33,7 +33,8 @@
         "visualizer_info": {
             "datasource_type": "influxdb"
         },
-        "env_vars": {}
+        "env_vars": {},
+        "secrets": ["gitlablsdtoken"]
     },
     "enable_auth": false
 }
