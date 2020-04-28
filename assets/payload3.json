@@ -7,7 +7,7 @@
             "/bin/bash",
             "wrapper.sh"
         ],
-        "img": "registry-git.lsd.ufcg.edu.br/asperathos-public/asperathos-public-images/ci:batch-base",
+        "img": "registry-git.lsd.ufcg.edu.br/asperathos/asperathos-docker-images/ci:batch-base",
         "init_size": 10,
         "redis_workload": "https://git.lsd.ufcg.edu.br/snippets/132/raw",
         "config_id": "asd",
