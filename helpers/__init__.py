@@ -1,15 +1,38 @@
 import requests
 import json
 import subprocess
+import logging
 
 from time import sleep
 from os import environ
+from subprocess import PIPE
+from datetime import datetime
+
+global_enabled = False
 
 DOCKER_HOST = environ['DOCKER_HOST_URL']
 MANAGER_URL = "http://{}:1500".format(DOCKER_HOST)
 CONTROLLER_URL = "http://{}:1502".format(DOCKER_HOST)
 MONITOR_URL = "http://{}:5001".format(DOCKER_HOST)
 VISUALIZER_URL = "http://{}:5002".format(DOCKER_HOST)
+
+
+def wait_until_manager_is_up(manager_url, max_wait_time=1000, max_tries=50):
+    delta = max_wait_time / max_tries
+    error_count = 0
+    for _ in range(max_tries):
+        sleep(delta)
+        try:
+            response = requests.get(manager_url + '/healthz')
+            if response.ok:
+                return error_count
+        except:
+            print("Could not contact manager. Trying again")
+            error_count += 1
+            # url = response.json().get('url')
+            # if url != "URL not generated!":
+            #    return url
+    raise Exception("Max tries to contact manager exceeded.")
 
 
 def wait_for_grafana_url_generation(visualizer_url, job_id, max_wait_time=120, max_tries=10):
@@ -52,7 +75,9 @@ def wait_for_job_complete(manager_url, job_id, max_wait_time=120, max_tries=10):
         response = requests.get(manager_url + '/submissions/{}'.format(job_id))
         if response.ok:
             status = response.json().get('status')
-            if status == "completed" and response.json().get('final_replicas'):
+            print("status:",status)
+#            if status == "completed":# and response.json().get('final_replicas'):
+            if status == "finished":# and response.json().get('final_replicas'):
                     return True
 
     raise Exception("Max tries for job to be completed exceeded.")
@@ -125,3 +150,51 @@ def get_manager_container_id():
 def restart_container(container_id):
     docker_command = 'docker restart {} && sleep 1m'.format(container_id)
     subprocess.check_output(docker_command, shell=True)
+
+
+def setup_asperathos():
+    subprocess.run(["docker-compose", "up", "-d", "--force-recreate"], cwd="test_env", check=True, stdout=PIPE, stderr=PIPE)
+    wait_until_manager_is_up(MANAGER_URL)
+
+
+def teardown_asperathos():
+    subprocess.run(["docker-compose", "down"], cwd="test_env", check=True, stdout=PIPE, stderr=PIPE)
+    subprocess.run(["kubernetes/asperathos_cleanup.sh", "kubernetes/config"], check=True, stdout=PIPE, stderr=PIPE)
+
+class Log:
+    def __init__(self, name, output_file_path):
+        self.logger = logging.getLogger(name)
+        if not len(self.logger.handlers):
+            handler = logging.StreamHandler()
+            handler.setLevel(logging.INFO)
+            self.logger.addHandler(handler)
+            handler = logging.FileHandler(output_file_path)
+            self.logger.addHandler(handler)
+            self.logger.propagate = False
+
+    def log(self, text):
+        if global_enabled:
+            self.logger.info(text)
+
+def enable():
+    global global_enabled
+    global_enabled = True
+
+def disable():
+    global global_enabled
+    global_enabled = False
+
+def configure_logging(logging_level="INFO"):
+    levels = {"CRITICAL": logging.CRITICAL, "DEBUG": logging.DEBUG,
+              "ERROR": logging.ERROR, "FATAL": logging.FATAL,
+              "INFO": logging.INFO, "NOTSET": logging.NOTSET,
+              "WARN": logging.WARN, "WARNING": logging.WARNING
+              }
+    logging.basicConfig(level=levels[logging_level])
+
+def get_logger():
+    configure_logging()
+    enable()
+    return Log("log", "integration.log")
+
+

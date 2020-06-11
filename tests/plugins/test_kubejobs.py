@@ -1,15 +1,17 @@
 import requests
 import pytest
 import subprocess
+from subprocess import PIPE
 from datetime import datetime
+import time
+import os
 
 from helpers import wait_for_grafana_url_generation, create_job
 from helpers import stop_job, MANAGER_URL, VISUALIZER_URL, get_jobs, delete_job
-from helpers import restart_container, wait_for_job_complete
-from helpers.fixtures import job_payload, manager_container_id
+from helpers import restart_container, wait_for_job_complete, wait_until_manager_is_up, get_manager_container_id
+from helpers.fixtures import job_payload, manager_container_id, setup_and_teardown_asperathos
 
-
-def test_create_job(job_payload):
+def test_create_job(job_payload, setup_and_teardown_asperathos):
     """ Tests if a Job is being created successfully
             Arguments:
                 job_payload {dict} -- A pytest fixture providing the Job
@@ -23,8 +25,7 @@ def test_create_job(job_payload):
     assert response_payload
     stop_job(manager_url=MANAGER_URL, job_id=response_payload.get('job_id'))
 
-
-def test_visualize_grafana():
+def test_visualize_grafana(setup_and_teardown_asperathos):
     """ Tests if the Grafana URL is being generated successfully
             Arguments:
                 None
@@ -36,7 +37,7 @@ def test_visualize_grafana():
     assert requests.get(grafana_url).ok
     stop_job(manager_url=MANAGER_URL, job_id=job_id)
 
-def test_controller_scales_up():
+def test_controller_scales_up(setup_and_teardown_asperathos):
     """ Tests if the Controlling is able to scale
         Arguments:
             None
@@ -53,7 +54,7 @@ def test_controller_scales_up():
     assert assertion
     stop_job(manager_url=MANAGER_URL, job_id=job_id)
 
-def test_controller_scales_down():
+def test_controller_scales_down(setup_and_teardown_asperathos):
     """ Tests if the Controlling is able to scale
         Arguments:
             None
@@ -70,7 +71,7 @@ def test_controller_scales_down():
     assert assertion
     stop_job(manager_url=MANAGER_URL, job_id=job_id)
 
-def test_monitor_report_matches_detailed():
+def test_monitor_report_matches_detailed(setup_and_teardown_asperathos):
     """ Tests if the metrics in the
         simple report matches with the detailed one.
     Arguments:
@@ -104,7 +105,7 @@ def test_monitor_report_matches_detailed():
     assert assertion
 
 @pytest.mark.last
-def test_persistence_works(manager_container_id):
+def test_persistence_works(setup_and_teardown_asperathos):
     """ Tests if Job persistence is working properly
     when manager is restarted
             Arguments:
@@ -112,7 +113,11 @@ def test_persistence_works(manager_container_id):
             Returns:
                 None
     """
-    # This test is here to ensure there will be more than 0 jobs registered
+    manager_container_id = get_manager_container_id()
+
+    job_id = create_job(MANAGER_URL, 3)
+    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=180)
+   
     jobs = get_jobs(MANAGER_URL)
     n_jobs = len(jobs)
     assert n_jobs > 0
@@ -120,5 +125,11 @@ def test_persistence_works(manager_container_id):
     restart_container(manager_container_id)
     assert n_jobs == len(get_jobs(MANAGER_URL))
 
-    delete_job(MANAGER_URL, list(jobs.keys())[0])
+    job_id = list(jobs.keys())[0]
+  
+    wait_for_job_complete(MANAGER_URL, job_id, max_wait_time=180) 
+
+    delete_job(MANAGER_URL, job_id)
+    
     assert len(get_jobs(MANAGER_URL)) < n_jobs
+
